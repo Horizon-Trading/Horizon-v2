@@ -1,12 +1,13 @@
 "use client";
 
+import type { NewsEvent } from "@/lib/types/NewsEvent";
 import { useState, useEffect } from "react";
 import { getHealth } from "@/lib/api/health";
 import { getNews } from "@/lib/api/news";
 
 export default function Home() {
   const [health, setHealth] = useState("undefined");
-  const [news, setNews] = useState<any[]>([]);
+  const [news, setNews] = useState<NewsEvent[]>([]);
 
   useEffect(() => {
     getHealth().then((data) => {
