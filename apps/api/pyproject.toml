@@ -1,0 +1,18 @@
+[project]
+name = "horizon-api"
+version = "0.1.0"
+requires-python = ">=3.12"
+
+dependencies = [
+  "fastapi",
+  "uvicorn[standard]",
+  "supabase",
+  "pydantic-settings",
+  "httpx",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "ruff",
+]
