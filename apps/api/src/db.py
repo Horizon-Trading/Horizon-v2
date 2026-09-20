@@ -3,5 +3,5 @@ from .config import settings
 
 supabase = create_client(
     settings.supabase_url,
-    settings.supabase_key,
+    settings.supabase_secret_key,
 )
