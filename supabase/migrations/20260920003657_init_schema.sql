@@ -1,7 +1,4 @@
--- =============================================
 -- NEWS EVENTS
--- =============================================
-
 create table public.news_events (
     id uuid primary key default gen_random_uuid(),
 
@@ -27,10 +24,7 @@ create index news_events_published_at_idx
     on public.news_events (published_at desc);
 
 
--- =============================================
 -- MARKET SNAPSHOTS
--- =============================================
-
 create table public.market_snapshots (
     id uuid primary key default gen_random_uuid(),
 
@@ -59,10 +53,7 @@ create index market_snapshots_ticker_idx
     on public.market_snapshots (ticker);
 
 
--- =============================================
 -- SIGNALS
--- =============================================
-
 create table public.signals (
     id uuid primary key default gen_random_uuid(),
 
