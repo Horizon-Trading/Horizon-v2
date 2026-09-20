@@ -1,0 +1,5 @@
+namespace horizon {
+
+  void placeholder() {}
+  
+}
