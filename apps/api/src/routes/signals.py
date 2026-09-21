@@ -11,7 +11,7 @@ router = APIRouter(
 def get_signals():
     response = (
         supabase.table("signals")
-        .select("*, news_events(*), market_snapshots(*)")
+        .select("*, news_event:news_events(*), market_snapshot:market_snapshots(*)")
         .order("created_at", desc=True)
         .execute()
     )
@@ -23,7 +23,7 @@ def get_signals():
 def get_signal(signal_id: str):
     response = (
         supabase.table("signals")
-        .select("*, news_events(*), market_snapshots(*)")
+        .select("*, news_event:news_events(*), market_snapshot:market_snapshots(*)")
         .eq("id", signal_id)
         .single()
         .execute()
