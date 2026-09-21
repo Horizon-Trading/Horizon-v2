@@ -1,32 +1,30 @@
 "use client";
 
-import type { NewsEvent } from "@/lib/types/NewsEvent";
+import type { Signals } from "@/lib/types/Signals";
 import { useState, useEffect } from "react";
 import { getHealth } from "@/lib/api/health";
-import { getNews } from "@/lib/api/news";
+import { getSignals } from "@/lib/api/signals";
 
 export default function Home() {
   const [health, setHealth] = useState("undefined");
-  const [news, setNews] = useState<NewsEvent[]>([]);
+  const [signals, setSignals] = useState<Signals[]>([]);
 
   useEffect(() => {
     getHealth().then((data) => {
       setHealth(data.status);
     });
 
-    getNews().then(setNews).catch(console.error);
+    getSignals().then(setSignals).catch(console.error);
   }, []);
 
   return (
     <main className="flex flex-col gap-4">
       <h1>{health}</h1>
 
-      {news.map((event) => (
-        <div key={event.id}>
-          <p>{event.published_at}</p>
-          <strong>{event.ticker}</strong>
-          <p>{event.title}</p>
-          <a>{event.url}</a>
+      {signals.map((signal) => (
+        <div key={signal.id}>
+          <p>{signal.id}</p>
+          <strong>{signal.ticker}</strong>
         </div>
       ))}
     </main>
