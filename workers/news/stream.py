@@ -24,7 +24,6 @@ async def stream_news():
                 }
             )
         )
-
         print(await websocket.recv())
 
         # Subscribe to news
