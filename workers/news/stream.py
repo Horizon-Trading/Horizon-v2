@@ -4,6 +4,7 @@ import os
 import websockets
 from pathlib import Path
 from dotenv import load_dotenv
+from process import process_news
 
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
@@ -44,6 +45,7 @@ async def stream_news():
             for event in events:
                 if event.get("T") == "n":
                     print(event)
+                    process_news(event)
 
 
 if __name__ == "__main__":
