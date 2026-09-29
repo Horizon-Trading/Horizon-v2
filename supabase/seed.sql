@@ -1,10 +1,15 @@
 -- NEWS EVENTS
 insert into public.news_events (
     id,
+    provider,
+    provider_event_id,
     ticker,
     title,
     url,
     published_at,
+    received_at,
+    source,
+    author,
     event_type,
     summary,
     raw_data
@@ -12,30 +17,45 @@ insert into public.news_events (
 values
 (
     '11111111-1111-1111-1111-111111111111',
+    'seed',
+    'seed-nvda-001',
     'NVDA',
     'NVIDIA announces new AI infrastructure partnership',
     'https://example.com/news/nvda-ai-partnership',
     '2026-09-21T13:30:00Z',
+    '2026-09-21T13:30:05Z',
+    'Example News',
+    'Test Author',
     'partnership',
     'NVIDIA announced a new infrastructure partnership focused on AI computing.',
     '{"source":"seed","sentiment":"positive"}'::jsonb
 ),
 (
     '22222222-2222-2222-2222-222222222222',
+    'seed',
+    'seed-tsla-001',
     'TSLA',
     'Tesla reports stronger than expected quarterly deliveries',
     'https://example.com/news/tsla-deliveries',
     '2026-09-21T14:00:00Z',
+    '2026-09-21T14:00:04Z',
+    'Example News',
+    'Test Author',
     'earnings',
     'Tesla reported quarterly delivery figures above market expectations.',
     '{"source":"seed","sentiment":"positive"}'::jsonb
 ),
 (
     '33333333-3333-3333-3333-333333333333',
+    'seed',
+    'seed-aapl-001',
     'AAPL',
     'Apple unveils new hardware lineup',
     'https://example.com/news/aapl-product-launch',
     '2026-09-21T15:15:00Z',
+    '2026-09-21T15:15:06Z',
+    'Example News',
+    'Test Author',
     'product_launch',
     'Apple announced a new hardware lineup during a product event.',
     '{"source":"seed","sentiment":"neutral"}'::jsonb

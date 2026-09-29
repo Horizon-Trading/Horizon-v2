@@ -80,33 +80,48 @@ export type Database = {
       }
       news_events: {
         Row: {
+          author: string | null
           created_at: string
           event_type: string | null
           id: string
+          provider: string
+          provider_event_id: string
           published_at: string
           raw_data: Json | null
+          received_at: string
+          source: string | null
           summary: string | null
           ticker: string
           title: string
           url: string
         }
         Insert: {
+          author?: string | null
           created_at?: string
           event_type?: string | null
           id?: string
+          provider: string
+          provider_event_id: string
           published_at: string
           raw_data?: Json | null
+          received_at?: string
+          source?: string | null
           summary?: string | null
           ticker: string
           title: string
           url: string
         }
         Update: {
+          author?: string | null
           created_at?: string
           event_type?: string | null
           id?: string
+          provider?: string
+          provider_event_id?: string
           published_at?: string
           raw_data?: Json | null
+          received_at?: string
+          source?: string | null
           summary?: string | null
           ticker?: string
           title?: string
