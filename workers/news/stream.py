@@ -1,16 +1,12 @@
 import asyncio
 import json
-import os
 import websockets
-from pathlib import Path
-from dotenv import load_dotenv
+from .config import settings
 from .process import process_news
 
-load_dotenv(Path(__file__).resolve().parents[2] / ".env")
-
-ALPACA_NEWS_URL = os.environ["ALPACA_NEWS_URL"]
-ALPACA_API_KEY = os.environ["ALPACA_API_KEY_ID"]
-ALPACA_API_SECRET_KEY = os.environ["ALPACA_API_SECRET_KEY"]
+ALPACA_NEWS_URL = settings.alpaca_news_url
+ALPACA_API_KEY = settings.alpaca_api_key_id
+ALPACA_API_SECRET_KEY = settings.alpaca_api_secret_key
 
 
 async def stream_news():

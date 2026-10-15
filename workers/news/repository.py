@@ -1,16 +1,9 @@
 from supabase import create_client
-import os
-from pathlib import Path
-from dotenv import load_dotenv
-
-load_dotenv(Path(__file__).resolve().parents[2] / ".env")
-
-SUPABASE_URL = os.environ["SUPABASE_URL"]
-SUPABASE_SECRET_KEY = os.environ["SUPABASE_SECRET_KEY"]
+from .config import settings
 
 supabase = create_client(
-    SUPABASE_URL,
-    SUPABASE_SECRET_KEY,
+    settings.supabase_url,
+    settings.supabase_secret_key,
 )
 
 
