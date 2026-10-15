@@ -1,4 +1,4 @@
-from repository import save_event
+from .repository import save_event
 
 
 def process_news(article: dict) -> None:

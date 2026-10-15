@@ -2,7 +2,6 @@ from supabase import create_client
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from process import process_news
 
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
