@@ -1,6 +1,6 @@
 import json
 import websockets
-from workers.config import settings
+from config import settings
 
 ALPACA_NEWS_URL = settings.alpaca_news_url
 ALPACA_API_KEY = settings.alpaca_api_key_id

@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     alpaca_api_secret_key: str
 
     model_config = SettingsConfigDict(
-        env_file=Path(__file__).resolve().parents[2] / ".env",
+        env_file=Path(__file__).resolve().parents[1] / ".env",
         env_file_encoding="utf-8",
     )
 

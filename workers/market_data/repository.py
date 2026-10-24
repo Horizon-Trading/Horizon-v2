@@ -1,7 +1,7 @@
 from typing import Any, cast
 
 from supabase import create_client
-from workers.config import settings
+from config import settings
 
 supabase = create_client(
     settings.supabase_url,

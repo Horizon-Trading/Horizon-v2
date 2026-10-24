@@ -1,7 +1,7 @@
 import httpx
 from datetime import datetime, timezone
 
-from workers.config import settings
+from config import settings
 
 
 def get_market_snapshot(ticker: str) -> dict:
