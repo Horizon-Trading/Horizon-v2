@@ -38,18 +38,38 @@ cd ../api
 uv sync
 ```
 
-Start Supabase from the project root:
-
-```bash
-npx supabase start
-```
-
 Environment templates are provided in:
 
 ```text
 .env.example
 apps/api/.env.example
 apps/web/.env.example
+```
+
+Start Supabase:
+
+```bash
+npx supabase start
+```
+
+Start the api:
+
+```bash
+cd apps/api
+uv run fastapi dev src/main.py
+```
+
+Start the web dashboard:
+
+```bash
+cd apps/web
+npm run dev
+```
+
+Start listening for signals:
+
+```
+uv run python -m core.run
 ```
 
 ## Status
