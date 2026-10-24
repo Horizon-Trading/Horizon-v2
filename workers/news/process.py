@@ -1,10 +1,15 @@
 from .repository import save_event
+from market_data.market_data import get_market_snapshot
+from market_data.repository import save_snapshot
 
 
 def process_news(article: dict) -> None:
     events = normalize_article(article)
+
     for event in events:
-        save_event(event)
+        saved_event = save_event(event)
+        snapshot = get_market_snapshot(event["ticker"])
+        save_snapshot(saved_event["id"], snapshot)
 
 
 def normalize_article(article: dict) -> list[dict]:
