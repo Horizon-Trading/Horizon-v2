@@ -1,8 +1,6 @@
-import asyncio
 import json
 import websockets
 from workers.config import settings
-from .process import process_news
 
 ALPACA_NEWS_URL = settings.alpaca_news_url
 ALPACA_API_KEY = settings.alpaca_api_key_id
@@ -41,8 +39,4 @@ async def stream_news():
             for event in events:
                 if event.get("T") == "n":
                     print(event)
-                    process_news(event)
-
-
-if __name__ == "__main__":
-    asyncio.run(stream_news())
+                    yield event
