@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     supabase_secret_key: str
 
     alpaca_news_url: str
+    alpaca_data_url: str
     alpaca_paper_url: str
     alpaca_api_key_id: str
     alpaca_api_secret_key: str

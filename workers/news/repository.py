@@ -1,5 +1,5 @@
 from supabase import create_client
-from .config import settings
+from workers.config import settings
 
 supabase = create_client(
     settings.supabase_url,

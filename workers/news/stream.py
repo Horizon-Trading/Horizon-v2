@@ -1,7 +1,7 @@
 import asyncio
 import json
 import websockets
-from .config import settings
+from workers.config import settings
 from .process import process_news
 
 ALPACA_NEWS_URL = settings.alpaca_news_url
