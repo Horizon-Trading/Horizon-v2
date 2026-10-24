@@ -1,3 +1,5 @@
+from typing import Any, cast
+
 from supabase import create_client
 from workers.config import settings
 
@@ -7,8 +9,8 @@ supabase = create_client(
 )
 
 
-def save_event(event: dict) -> None:
-    (
+def save_event(event: dict) -> dict:
+    response = (
         supabase.table("news_events")
         .upsert(
             event,
@@ -16,3 +18,5 @@ def save_event(event: dict) -> None:
         )
         .execute()
     )
+
+    return cast(dict[str, Any], response.data[0])
