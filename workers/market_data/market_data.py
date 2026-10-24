@@ -15,20 +15,20 @@ def get_market_snapshot(ticker: str) -> dict:
         },
         params={
             "feed": "iex",
-        }
+        },
         timeout=10.0,
     )
 
     response.raise_for_status()
-    data=response.json()
+    data = response.json()
 
     return {
         "ticker": ticker,
         "price": data.get("latestTrade").get("p"),
         "volume": data.get("dailyBar").get("v"),
         "minute_volume": data.get("minuteBar").get("v"),
-        "relative_volume": None, # TODO
-        "market_cap": None, # TODO
-        "float_shares": None, # TODO
+        "relative_volume": None,  # TODO
+        "market_cap": None,  # TODO
+        "float_shares": None,  # TODO
         "captured_at": datetime.now(timezone.utc),
     }
