@@ -26,7 +26,7 @@ def get_market_snapshot(ticker: str) -> dict:
         "ticker": ticker,
         "price": data.get("latestTrade").get("p"),
         "volume": data.get("dailyBar").get("v"),
-        # "minute_volume": data.get("minuteBar").get("v"),
+        # "minute_volume": data.get("minuteBar").get("v"), # TODO
         "relative_volume": None,  # TODO
         "market_cap": None,  # TODO
         "float_shares": None,  # TODO
