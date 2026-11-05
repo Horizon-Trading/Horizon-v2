@@ -11,7 +11,7 @@ export default function SignalCard({ signal, detail = false }: { signal: Signal;
     </header>
     <p className="text-sm">{signal.model_version === "seed" ? "Demo seed" : signal.model_version} · {new Date(signal.created_at).toLocaleString()}</p>
     <dl className="grid gap-3 text-sm sm:grid-cols-3">
-      <div><dt>{signal.model_version === "baseline-v1" ? "Data coverage" : "Confidence"}</dt><dd>{percent(signal.confidence)}</dd></div>
+      <div><dt>{signal.model_version === "baseline-v1" ? "Data coverage" : signal.model_version === "normal-log-returns-v1" ? "History coverage" : "Confidence"}</dt><dd>{percent(signal.confidence)}</dd></div>
       <div><dt>Expected return</dt><dd>{percent(signal.expected_return)}</dd></div>
       <div><dt>Model profit probability</dt><dd>{percent(signal.probability_profit)}</dd></div>
     </dl>
