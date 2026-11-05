@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { getHealth } from "@/lib/api/health";
 import { getSignals } from "@/lib/api/signals";
 import { getNews } from "@/lib/api/news";
@@ -33,6 +34,7 @@ export default function Home() {
       <div><h1 className="text-3xl font-bold">Horizon 2.0</h1><p>News-driven research and paper trading</p></div>
       <button className="rounded border px-4 py-2" disabled={loading} onClick={() => { setLoading(true); setRevision(revision + 1); }}>Refresh</button>
     </header>
+    <Link className="inline-block text-blue-600 underline" href="/portfolio">Paper portfolio, positions and trade history</Link>
     <p className="text-sm">API: {error ? "Unavailable" : data?.health ?? "Connecting"} · Updates every 30 seconds · Page {offset / 20 + 1}</p>
     {loading && <p role="status">Loading dashboard…</p>}
     {error && <p role="alert" className="rounded border border-red-500 p-3">{error}. Check the API connection and refresh. Previously loaded data may be stale.</p>}

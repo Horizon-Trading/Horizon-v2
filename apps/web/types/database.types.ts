@@ -275,6 +275,42 @@ export type Database = {
           },
         ]
       }
+      portfolio_snapshots: {
+        Row: {
+          broker_positions: Json
+          buying_power: number
+          captured_at: string
+          cash: number
+          equity: number
+          history: Json | null
+          history_error: string | null
+          id: string
+          trading_enabled: boolean
+        }
+        Insert: {
+          broker_positions?: Json
+          buying_power: number
+          captured_at?: string
+          cash: number
+          equity: number
+          history?: Json | null
+          history_error?: string | null
+          id?: string
+          trading_enabled: boolean
+        }
+        Update: {
+          broker_positions?: Json
+          buying_power?: number
+          captured_at?: string
+          cash?: number
+          equity?: number
+          history?: Json | null
+          history_error?: string | null
+          id?: string
+          trading_enabled?: boolean
+        }
+        Relationships: []
+      }
       positions: {
         Row: {
           avg_entry_price: number
@@ -484,6 +520,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      portfolio_trade_stats: { Args: never; Returns: Json }
     }
     Enums: {
       [_ in never]: never

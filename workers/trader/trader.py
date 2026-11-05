@@ -10,6 +10,7 @@ from . import broker
 from .decisions import age_seconds, exit_reason, order_quantity, qualifies
 from .reconcile import reconcile_orders, send_reserved_order
 from .repository import TERMINAL, reserve_order, supabase
+from .portfolio import capture_portfolio
 
 logger = logging.getLogger(__name__)
 JOIN = "*,news_event:news_events(*),market_snapshot:market_snapshots!signals_market_snapshot_id_fkey(*)"
@@ -23,6 +24,10 @@ def fresh_quote(ticker: str, now: datetime) -> dict | None:
 
 def trading_cycle() -> None:
     reconcile_orders()
+    try:
+        capture_portfolio()
+    except Exception as exc:
+        logger.warning("Portfolio capture failed error=%s",type(exc).__name__)
     if not settings.paper_trading_enabled:
         return
     clock = broker.request("GET", "/clock")
