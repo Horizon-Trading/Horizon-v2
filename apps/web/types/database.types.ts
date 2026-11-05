@@ -138,39 +138,77 @@ export type Database = {
         }
         Relationships: []
       }
+      signal_history: {
+        Row: {
+          data: Json
+          id: number
+          recorded_at: string
+          signal_id: string
+        }
+        Insert: {
+          data: Json
+          id?: never
+          recorded_at?: string
+          signal_id: string
+        }
+        Update: {
+          data?: Json
+          id?: never
+          recorded_at?: string
+          signal_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "signal_history_signal_id_fkey"
+            columns: ["signal_id"]
+            isOneToOne: false
+            referencedRelation: "signals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       signals: {
         Row: {
+          analysis: Json
           confidence: number | null
           created_at: string
           expected_return: number | null
           id: string
           market_snapshot_id: string | null
+          model_version: string
           news_event_id: string | null
           probability_profit: number | null
           score: number | null
           ticker: string
+          updated_at: string
         }
         Insert: {
+          analysis?: Json
           confidence?: number | null
           created_at?: string
           expected_return?: number | null
           id?: string
           market_snapshot_id?: string | null
+          model_version?: string
           news_event_id?: string | null
           probability_profit?: number | null
           score?: number | null
           ticker: string
+          updated_at?: string
         }
         Update: {
+          analysis?: Json
           confidence?: number | null
           created_at?: string
           expected_return?: number | null
           id?: string
           market_snapshot_id?: string | null
+          model_version?: string
           news_event_id?: string | null
           probability_profit?: number | null
           score?: number | null
           ticker?: string
+          updated_at?: string
         }
         Relationships: [
           {
@@ -181,9 +219,16 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "signals_matching_snapshot_fk"
+            columns: ["market_snapshot_id", "news_event_id", "ticker"]
+            isOneToOne: false
+            referencedRelation: "market_snapshots"
+            referencedColumns: ["id", "news_event_id", "ticker"]
+          },
+          {
             foreignKeyName: "signals_news_event_id_fkey"
             columns: ["news_event_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "news_events"
             referencedColumns: ["id"]
           },
@@ -194,6 +239,34 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      pending_signal_events: {
+        Args: { batch_size?: number }
+        Returns: {
+          author: string | null
+          created_at: string
+          event_type: string | null
+          id: string
+          next_snapshot_attempt_at: string
+          provider: string
+          provider_event_id: string
+          published_at: string
+          raw_data: Json | null
+          received_at: string
+          snapshot_attempts: number
+          snapshot_error: string | null
+          source: string | null
+          summary: string | null
+          ticker: string
+          title: string
+          url: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "news_events"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       pending_snapshot_events: {
         Args: { batch_size?: number }
         Returns: {

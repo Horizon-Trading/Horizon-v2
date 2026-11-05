@@ -6,6 +6,8 @@ from .repository import save_event, record_snapshot_attempt, pending_snapshot_ev
 from .analysis import classify_event, summarize
 from market_data.market_data import get_market_snapshot
 from market_data.repository import save_snapshot, get_snapshot
+from signals.scoring import score_signal
+from signals.repository import save_signal, pending_signal_events
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +22,7 @@ def process_news(article: dict) -> None:
     for event in events:
         try:
             saved_event = save_event(event)
-            capture_snapshot(saved_event)
+            process_saved_event(saved_event)
         except Exception as exc:
             # A provider/persistence failure must not discard other symbols.
             # Do not log response bodies, raw articles or credentials.
@@ -28,6 +30,12 @@ def process_news(article: dict) -> None:
                 "News processing failed provider_event_id=%s ticker=%s error=%s",
                 event["provider_event_id"], event["ticker"], type(exc).__name__,
             )
+
+
+def process_saved_event(event: dict) -> None:
+    snapshot = capture_snapshot(event)
+    if snapshot is not None:
+        save_signal(score_signal(event, snapshot))
 
 
 def capture_snapshot(event: dict) -> dict | None:
@@ -51,9 +59,14 @@ def capture_snapshot(event: dict) -> dict | None:
 def recover_snapshots() -> None:
     for event in pending_snapshot_events():
         try:
-            capture_snapshot(event)
+            process_saved_event(event)
         except Exception as exc:
             logger.warning("Snapshot retry failed event_id=%s error=%s", event["id"], type(exc).__name__)
+    for event in pending_signal_events():
+        try:
+            process_saved_event(event)
+        except Exception as exc:
+            logger.warning("Signal retry failed event_id=%s error=%s", event["id"], type(exc).__name__)
 
 
 def normalize_article(article: dict) -> list[dict]:

@@ -42,6 +42,10 @@ class PipelineTests(unittest.TestCase):
         self.attempt = attempt.start()
         self.addCleanup(get.stop)
         self.addCleanup(attempt.stop)
+        for name, value in (("pending_signal_events", []), ("score_signal", {}), ("save_signal", {})):
+            mock = patch.object(self.process, name, return_value=value)
+            mock.start()
+            self.addCleanup(mock.stop)
 
     def test_repeated_delivery_reuses_original_snapshot(self):
         self.get_saved.return_value = {"id": "original", "price": 12}
