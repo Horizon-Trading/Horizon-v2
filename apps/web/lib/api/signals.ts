@@ -1,10 +1,6 @@
-export async function getSignals() {
-  const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/signals`);
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch signals");
-  }
-
-  return response.json();
-}
+import { getJson } from "./client";
+import type { Signal } from "../types/Signal";
+import type { Database } from "@/types/database.types";
+export const getSignals = (offset = 0) => getJson<Signal[]>("/signals?limit=20&offset=" + offset);
+export const getSignal = (id: string) => getJson<Signal>("/signals/" + encodeURIComponent(id));
+export const getSignalHistory = (id: string) => getJson<Database["public"]["Tables"]["signal_history"]["Row"][]>("/signals/" + encodeURIComponent(id) + "/history");

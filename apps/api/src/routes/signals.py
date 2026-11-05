@@ -50,4 +50,3 @@ def enrich_signal(row: dict) -> dict:
     if result.get("news_event"):
         result["news_event"] = news_with_latency(result["news_event"])
     return result
-
