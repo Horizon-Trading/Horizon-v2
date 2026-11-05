@@ -203,12 +203,14 @@ export type Database = {
           filled_avg_price: number | null
           filled_quantity: number
           id: string
+          limit_price: number | null
           purpose: string
           quantity: number
           reason: string
           side: string
           signal_id: string | null
           status: string
+          submission_attempts: number
           ticker: string
           updated_at: string
         }
@@ -223,12 +225,14 @@ export type Database = {
           filled_avg_price?: number | null
           filled_quantity?: number
           id?: string
+          limit_price?: number | null
           purpose: string
           quantity: number
           reason: string
           side: string
           signal_id?: string | null
           status?: string
+          submission_attempts?: number
           ticker: string
           updated_at?: string
         }
@@ -243,12 +247,14 @@ export type Database = {
           filled_avg_price?: number | null
           filled_quantity?: number
           id?: string
+          limit_price?: number | null
           purpose?: string
           quantity?: number
           reason?: string
           side?: string
           signal_id?: string | null
           status?: string
+          submission_attempts?: number
           ticker?: string
           updated_at?: string
         }

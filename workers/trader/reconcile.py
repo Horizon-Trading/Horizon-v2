@@ -1,6 +1,6 @@
 import logging
 from . import broker
-from .repository import TERMINAL, apply_broker_order, record_error, tracked_orders
+from .repository import TERMINAL, apply_broker_order, record_error, tracked_orders, supabase
 
 logger = logging.getLogger(__name__)
 
@@ -21,10 +21,15 @@ def reconcile_orders() -> None:
 def send_reserved_order(local: dict) -> None:
     if local["status"] != "pending_submit":
         return
+    if local.get("submission_attempts", 0) >= 3:
+        return
     payload = {"client_order_id": local["client_order_id"], "symbol": local["ticker"],
                "qty": str(local["quantity"]), "side": local["side"], "type": "market",
                "time_in_force": "day"}
+    if local.get("limit_price") is not None:
+        payload.update({"type":"limit", "limit_price":str(local["limit_price"])})
     try:
+        supabase.table("orders").update({"submission_attempts": local.get("submission_attempts", 0)+1}).eq("id",local["id"]).execute()
         remote = broker.submit_order(payload)
         apply_broker_order(local, remote)
     except Exception as exc:

@@ -6,12 +6,14 @@ TERMINAL = {"filled", "canceled", "expired", "rejected"}
 
 
 def reserve_order(signal_id: str, ticker: str, quantity: int | Decimal, reason: str,
-                  entry_order_id: str | None = None, attempt: int = 0) -> dict | None:
+                  entry_order_id: str | None = None, attempt: int = 0,
+                  limit_price: Decimal | None = None) -> dict | None:
     purpose = "exit" if entry_order_id else "entry"
     client_id = f"hzn-{purpose}-{entry_order_id or signal_id}" + (f"-{attempt}" if entry_order_id else "")
     row = {"signal_id": signal_id, "ticker": ticker, "quantity": str(quantity),
            "purpose": purpose, "side": "sell" if entry_order_id else "buy",
-           "entry_order_id": entry_order_id, "reason": reason, "client_order_id": client_id}
+           "entry_order_id": entry_order_id, "reason": reason, "client_order_id": client_id,
+           "limit_price": str(limit_price) if limit_price is not None else None}
     try:
         return supabase.table("orders").insert(row).execute().data[0]
     except APIError as exc:

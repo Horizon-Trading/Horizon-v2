@@ -7,6 +7,19 @@ from config import settings
 from .features import get_features
 
 
+def get_latest_quote(ticker: str) -> dict:
+    response = httpx.get(settings.alpaca_data_url.rstrip("/") + "/stocks/" + ticker + "/snapshot",
+                        headers={"APCA-API-KEY-ID": settings.alpaca_api_key_id,
+                                 "APCA-API-SECRET-KEY": settings.alpaca_api_secret_key},
+                        params={"feed": "iex"}, timeout=10.0)
+    response.raise_for_status()
+    trade = response.json().get("latestTrade") or {}
+    price = trade.get("p")
+    if isinstance(price,bool) or not isinstance(price,(int,float)) or not math.isfinite(price) or price<=0:
+        raise ValueError("No valid current trade")
+    return {"price": price, "observed_at": trade.get("t")}
+
+
 def get_market_snapshot(ticker: str) -> dict:
     url = settings.alpaca_data_url + "/stocks/" + ticker + "/snapshot"
 
