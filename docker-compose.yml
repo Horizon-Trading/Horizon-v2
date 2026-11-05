@@ -1,0 +1,38 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    env_file: .env
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      HORIZON_API_TOKEN: ${HORIZON_API_TOKEN:-}
+      SUPABASE_URL: ${SUPABASE_DOCKER_URL:-http://host.docker.internal:54321}
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    ports: ["127.0.0.1:${API_PORT:-8000}:8000"]
+    restart: unless-stopped
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      API_INTERNAL_URL: http://api:8000
+      HORIZON_API_TOKEN: ${HORIZON_API_TOKEN:-}
+      DASHBOARD_USER: ${DASHBOARD_USER:-horizon}
+      DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD:-}
+    ports: ["127.0.0.1:${WEB_PORT:-3000}:3000"]
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+  workers:
+    build:
+      context: .
+      dockerfile: workers/Dockerfile
+    env_file: .env
+    environment:
+      SUPABASE_URL: ${SUPABASE_DOCKER_URL:-http://host.docker.internal:54321}
+      PAPER_TRADING_ENABLED: ${PAPER_TRADING_ENABLED:-false}
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: unless-stopped

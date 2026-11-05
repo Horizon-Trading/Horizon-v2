@@ -1,0 +1,15 @@
+.git
+.codex
+.env
+.env.*
+**/.env
+**/.env.*
+**/node_modules
+**/.next
+**/.venv
+**/__pycache__
+**/.ruff_cache
+build
+output
+tmp
+**/*.log

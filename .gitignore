@@ -21,6 +21,7 @@ pnpm-debug.log*
 
 # OS / IDE
 .codex/
+.ruff_cache/
 *.tsbuildinfo
 .DS_Store
 Thumbs.db

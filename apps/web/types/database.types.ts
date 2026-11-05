@@ -75,12 +75,14 @@ export type Database = {
       market_snapshots: {
         Row: {
           captured_at: string
+          feature_attempts: number
           feature_data: Json
           float_shares: number | null
           id: string
           market_adjusted_return: number | null
           market_cap: number | null
           news_event_id: string | null
+          next_feature_attempt_at: string
           price: number
           price_change: number | null
           price_observed_at: string | null
@@ -91,12 +93,14 @@ export type Database = {
         }
         Insert: {
           captured_at?: string
+          feature_attempts?: number
           feature_data?: Json
           float_shares?: number | null
           id?: string
           market_adjusted_return?: number | null
           market_cap?: number | null
           news_event_id?: string | null
+          next_feature_attempt_at?: string
           price: number
           price_change?: number | null
           price_observed_at?: string | null
@@ -107,12 +111,14 @@ export type Database = {
         }
         Update: {
           captured_at?: string
+          feature_attempts?: number
           feature_data?: Json
           float_shares?: number | null
           id?: string
           market_adjusted_return?: number | null
           market_cap?: number | null
           news_event_id?: string | null
+          next_feature_attempt_at?: string
           price?: number
           price_change?: number | null
           price_observed_at?: string | null
@@ -447,6 +453,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      worker_status: {
+        Row: {
+          component: string
+          error: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          component: string
+          error?: string | null
+          status: string
+          updated_at?: string
+        }
+        Update: {
+          component?: string
+          error?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {
