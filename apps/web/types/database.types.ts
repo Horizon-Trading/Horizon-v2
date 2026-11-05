@@ -37,35 +37,50 @@ export type Database = {
       market_snapshots: {
         Row: {
           captured_at: string
+          feature_data: Json
           float_shares: number | null
           id: string
+          market_adjusted_return: number | null
           market_cap: number | null
           news_event_id: string | null
           price: number
+          price_change: number | null
+          price_observed_at: string | null
           relative_volume: number | null
           ticker: string
+          volatility: number | null
           volume: number | null
         }
         Insert: {
           captured_at?: string
+          feature_data?: Json
           float_shares?: number | null
           id?: string
+          market_adjusted_return?: number | null
           market_cap?: number | null
           news_event_id?: string | null
           price: number
+          price_change?: number | null
+          price_observed_at?: string | null
           relative_volume?: number | null
           ticker: string
+          volatility?: number | null
           volume?: number | null
         }
         Update: {
           captured_at?: string
+          feature_data?: Json
           float_shares?: number | null
           id?: string
+          market_adjusted_return?: number | null
           market_cap?: number | null
           news_event_id?: string | null
           price?: number
+          price_change?: number | null
+          price_observed_at?: string | null
           relative_volume?: number | null
           ticker?: string
+          volatility?: number | null
           volume?: number | null
         }
         Relationships: [

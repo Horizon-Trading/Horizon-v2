@@ -96,7 +96,8 @@ class PipelineTests(unittest.TestCase):
     def snapshot(self, data):
         response = MagicMock()
         response.json.return_value = data
-        with patch.object(self.market.httpx, "get", return_value=response):
+        with patch.object(self.market.httpx, "get", return_value=response), \
+             patch.object(self.market, "get_features", return_value={"relative_volume": None}):
             return self.market.get_market_snapshot("AMD")
 
     def test_missing_volume_stays_null(self):

@@ -8,6 +8,7 @@ dependencies = [
     "python-dotenv>=1.2.3",
     "supabase>=2.31.0",
     "websockets>=15.0.1",
+    "tzdata>=2025.2",
 ]
 
 [tool.uv]

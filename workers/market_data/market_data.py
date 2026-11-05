@@ -1,8 +1,10 @@
 import httpx
 import math
+import logging
 from datetime import datetime, timezone
 
 from config import settings
+from .features import get_features
 
 
 def get_market_snapshot(ticker: str) -> dict:
@@ -33,13 +35,22 @@ def get_market_snapshot(ticker: str) -> dict:
     if isinstance(volume, bool) or not isinstance(volume, int) or volume < 0:
         volume = None
 
+    captured_at = datetime.now(timezone.utc)
+    features = {"price_change": None, "market_adjusted_return": None, "volatility": None,
+                "relative_volume": None, "feature_data": {}}
+    try:
+        features = get_features(ticker, captured_at)
+    except (httpx.HTTPError, ValueError, TypeError, KeyError) as exc:
+        logging.getLogger(__name__).warning("Historical features unavailable ticker=%s error=%s", ticker, type(exc).__name__)
+        features["feature_data"] = {"status": "unavailable", "error": type(exc).__name__}
+
     return {
         "ticker": ticker,
         "price": price,
         "volume": volume,
-        # "minute_volume": data.get("minuteBar").get("v"), # TODO
-        "relative_volume": None,  # TODO
-        "market_cap": None,  # TODO
-        "float_shares": None,  # TODO
-        "captured_at": datetime.now(timezone.utc).isoformat(),
+        "price_observed_at": trade.get("t"),
+        "market_cap": None,
+        "float_shares": None,
+        "captured_at": captured_at.isoformat(),
+        **features,
     }
