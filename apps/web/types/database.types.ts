@@ -72,7 +72,7 @@ export type Database = {
           {
             foreignKeyName: "market_snapshots_news_event_id_fkey"
             columns: ["news_event_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "news_events"
             referencedColumns: ["id"]
           },
@@ -84,11 +84,14 @@ export type Database = {
           created_at: string
           event_type: string | null
           id: string
+          next_snapshot_attempt_at: string
           provider: string
           provider_event_id: string
           published_at: string
           raw_data: Json | null
           received_at: string
+          snapshot_attempts: number
+          snapshot_error: string | null
           source: string | null
           summary: string | null
           ticker: string
@@ -100,11 +103,14 @@ export type Database = {
           created_at?: string
           event_type?: string | null
           id?: string
+          next_snapshot_attempt_at?: string
           provider: string
           provider_event_id: string
           published_at: string
           raw_data?: Json | null
           received_at?: string
+          snapshot_attempts?: number
+          snapshot_error?: string | null
           source?: string | null
           summary?: string | null
           ticker: string
@@ -116,11 +122,14 @@ export type Database = {
           created_at?: string
           event_type?: string | null
           id?: string
+          next_snapshot_attempt_at?: string
           provider?: string
           provider_event_id?: string
           published_at?: string
           raw_data?: Json | null
           received_at?: string
+          snapshot_attempts?: number
+          snapshot_error?: string | null
           source?: string | null
           summary?: string | null
           ticker?: string
@@ -185,7 +194,34 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      pending_snapshot_events: {
+        Args: { batch_size?: number }
+        Returns: {
+          author: string | null
+          created_at: string
+          event_type: string | null
+          id: string
+          next_snapshot_attempt_at: string
+          provider: string
+          provider_event_id: string
+          published_at: string
+          raw_data: Json | null
+          received_at: string
+          snapshot_attempts: number
+          snapshot_error: string | null
+          source: string | null
+          summary: string | null
+          ticker: string
+          title: string
+          url: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "news_events"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
       [_ in never]: never

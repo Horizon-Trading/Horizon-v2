@@ -2,9 +2,9 @@ import logging
 import re
 from datetime import datetime
 
-from .repository import save_event
+from .repository import save_event, record_snapshot_attempt, pending_snapshot_events
 from market_data.market_data import get_market_snapshot
-from market_data.repository import save_snapshot
+from market_data.repository import save_snapshot, get_snapshot
 
 logger = logging.getLogger(__name__)
 
@@ -19,8 +19,7 @@ def process_news(article: dict) -> None:
     for event in events:
         try:
             saved_event = save_event(event)
-            snapshot = get_market_snapshot(saved_event["ticker"])
-            save_snapshot(saved_event["id"], snapshot)
+            capture_snapshot(saved_event)
         except Exception as exc:
             # A provider/persistence failure must not discard other symbols.
             # Do not log response bodies, raw articles or credentials.
@@ -28,6 +27,32 @@ def process_news(article: dict) -> None:
                 "News processing failed provider_event_id=%s ticker=%s error=%s",
                 event["provider_event_id"], event["ticker"], type(exc).__name__,
             )
+
+
+def capture_snapshot(event: dict) -> dict | None:
+    existing = get_snapshot(event["id"])
+    if existing is not None:
+        return existing
+    if event.get("snapshot_attempts", 0) >= 5:
+        return None
+    due_at = event.get("next_snapshot_attempt_at")
+    if due_at and datetime.fromisoformat(due_at.replace("Z", "+00:00")) > datetime.now().astimezone():
+        return None
+    # Persist the scheduled retry before HTTP so a process crash is recoverable.
+    record_snapshot_attempt(event)
+    try:
+        return save_snapshot(event["id"], get_market_snapshot(event["ticker"]))
+    except Exception as exc:
+        record_snapshot_attempt(event, type(exc).__name__)
+        raise
+
+
+def recover_snapshots() -> None:
+    for event in pending_snapshot_events():
+        try:
+            capture_snapshot(event)
+        except Exception as exc:
+            logger.warning("Snapshot retry failed event_id=%s error=%s", event["id"], type(exc).__name__)
 
 
 def normalize_article(article: dict) -> list[dict]:

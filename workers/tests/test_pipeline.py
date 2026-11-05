@@ -35,6 +35,33 @@ class PipelineTests(unittest.TestCase):
                 "created_at": "2026-11-04T15:00:00Z",
                 "symbols": symbols if symbols is not None else ["NVDA", "AMD"]}
 
+    def setUp(self):
+        get = patch.object(self.process, "get_snapshot", return_value=None)
+        attempt = patch.object(self.process, "record_snapshot_attempt")
+        self.get_saved = get.start()
+        self.attempt = attempt.start()
+        self.addCleanup(get.stop)
+        self.addCleanup(attempt.stop)
+
+    def test_repeated_delivery_reuses_original_snapshot(self):
+        self.get_saved.return_value = {"id": "original", "price": 12}
+        with patch.object(self.process, "get_market_snapshot") as get:
+            self.assertEqual(self.process.capture_snapshot({"id": "news"})["id"], "original")
+            get.assert_not_called()
+            self.attempt.assert_not_called()
+
+    def test_exhausted_and_not_due_retries_do_not_call_provider(self):
+        with patch.object(self.process, "get_market_snapshot") as get:
+            self.process.capture_snapshot({"id": "a", "snapshot_attempts": 5})
+            self.process.capture_snapshot({"id": "b", "next_snapshot_attempt_at": "2099-01-01T00:00:00Z"})
+            get.assert_not_called()
+
+    def test_recovery_continues_after_one_failed_event(self):
+        with patch.object(self.process, "pending_snapshot_events", return_value=[{"id": "a"}, {"id": "b"}]), \
+             patch.object(self.process, "capture_snapshot", side_effect=[RuntimeError(), {}]) as capture:
+            self.process.recover_snapshots()
+            self.assertEqual(capture.call_count, 2)
+
     def test_symbols_are_validated_and_deduplicated(self):
         article = self.article(["NVDA", None, "../bad", "AMD", "nvda", "BRK.B"])
         rows = self.process.normalize_article(article)

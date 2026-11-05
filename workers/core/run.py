@@ -3,12 +3,26 @@ import logging
 
 from config import settings
 from news.stream import stream_news
-from news.process import process_news
+from news.process import process_news, recover_snapshots
+
+
+async def recover_pending():
+    while True:
+        try:
+            await asyncio.to_thread(recover_snapshots)
+        except Exception as exc:
+            logging.getLogger(__name__).warning("Recovery scan failed error=%s", type(exc).__name__)
+        await asyncio.sleep(30)
 
 
 async def main():
-    async for article in stream_news():
-        await asyncio.to_thread(process_news, article)
+    recovery = asyncio.create_task(recover_pending())
+    try:
+        async for article in stream_news():
+            await asyncio.to_thread(process_news, article)
+    finally:
+        recovery.cancel()
+        await asyncio.gather(recovery, return_exceptions=True)
 
 
 if __name__ == "__main__":
