@@ -3,6 +3,7 @@ import re
 from datetime import datetime
 
 from .repository import save_event, record_snapshot_attempt, pending_snapshot_events
+from .analysis import classify_event, summarize
 from market_data.market_data import get_market_snapshot
 from market_data.repository import save_snapshot, get_snapshot
 
@@ -87,7 +88,8 @@ def normalize_article(article: dict) -> list[dict]:
                 "provider_event_id": str(article["id"]),
                 "ticker": ticker,
                 "title": article["headline"],
-                "summary": article.get("summary"),
+                "summary": summarize(article),
+                "event_type": classify_event(article["headline"]),
                 "url": article["url"],
                 "source": article.get("source"),
                 "author": article.get("author"),
