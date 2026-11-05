@@ -20,6 +20,8 @@ yarn-debug.log*
 pnpm-debug.log*
 
 # OS / IDE
+.codex/
+*.tsbuildinfo
 .DS_Store
 Thumbs.db
 .vscode/

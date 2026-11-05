@@ -1,10 +1,12 @@
 import json
+import logging
 import websockets
 from config import settings
 
 ALPACA_NEWS_URL = settings.alpaca_news_url
 ALPACA_API_KEY = settings.alpaca_api_key_id
 ALPACA_API_SECRET_KEY = settings.alpaca_api_secret_key
+logger = logging.getLogger(__name__)
 
 
 async def stream_news():
@@ -34,9 +36,15 @@ async def stream_news():
 
         # Listen forever
         async for message in websocket:
-            events = json.loads(message)
+            try:
+                events = json.loads(message)
+            except (ValueError, TypeError):
+                logger.warning("Ignoring malformed news frame")
+                continue
+            if not isinstance(events, list):
+                logger.warning("Ignoring non-array news frame")
+                continue
 
             for event in events:
-                if event.get("T") == "n":
-                    print(event)
+                if isinstance(event, dict) and event.get("T") == "n":
                     yield event
