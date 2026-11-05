@@ -1,5 +1,6 @@
 from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field
 
 
 class Settings(BaseSettings):
@@ -16,6 +17,9 @@ class Settings(BaseSettings):
     alpaca_paper_url: str
     alpaca_api_key_id: str
     alpaca_api_secret_key: str
+    quant_engine_path: str | None = None
+    quant_paths: int = Field(default=10000, ge=1000, le=100000)
+    quant_horizon_days: int = Field(default=5, ge=1, le=30)
 
     model_config = SettingsConfigDict(
         env_file=Path(__file__).resolve().parents[1] / ".env",
