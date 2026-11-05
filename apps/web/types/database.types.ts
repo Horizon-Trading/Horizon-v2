@@ -34,6 +34,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      executions: {
+        Row: {
+          cumulative_quantity: number
+          id: number
+          observed_at: string
+          order_id: string
+          price: number
+          quantity: number
+          source: string
+        }
+        Insert: {
+          cumulative_quantity: number
+          id?: never
+          observed_at?: string
+          order_id: string
+          price: number
+          quantity: number
+          source?: string
+        }
+        Update: {
+          cumulative_quantity?: number
+          id?: never
+          observed_at?: string
+          order_id?: string
+          price?: number
+          quantity?: number
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "executions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       market_snapshots: {
         Row: {
           captured_at: string
@@ -153,6 +191,125 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          broker_order_id: string | null
+          broker_updated_at: string | null
+          client_order_id: string
+          created_at: string
+          entry_order_id: string | null
+          error: string | null
+          exposure_closed: boolean
+          filled_avg_price: number | null
+          filled_quantity: number
+          id: string
+          purpose: string
+          quantity: number
+          reason: string
+          side: string
+          signal_id: string | null
+          status: string
+          ticker: string
+          updated_at: string
+        }
+        Insert: {
+          broker_order_id?: string | null
+          broker_updated_at?: string | null
+          client_order_id: string
+          created_at?: string
+          entry_order_id?: string | null
+          error?: string | null
+          exposure_closed?: boolean
+          filled_avg_price?: number | null
+          filled_quantity?: number
+          id?: string
+          purpose: string
+          quantity: number
+          reason: string
+          side: string
+          signal_id?: string | null
+          status?: string
+          ticker: string
+          updated_at?: string
+        }
+        Update: {
+          broker_order_id?: string | null
+          broker_updated_at?: string | null
+          client_order_id?: string
+          created_at?: string
+          entry_order_id?: string | null
+          error?: string | null
+          exposure_closed?: boolean
+          filled_avg_price?: number | null
+          filled_quantity?: number
+          id?: string
+          purpose?: string
+          quantity?: number
+          reason?: string
+          side?: string
+          signal_id?: string | null
+          status?: string
+          ticker?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_entry_order_id_fkey"
+            columns: ["entry_order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_signal_id_fkey"
+            columns: ["signal_id"]
+            isOneToOne: false
+            referencedRelation: "signals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      positions: {
+        Row: {
+          avg_entry_price: number
+          closed_at: string | null
+          entry_order_id: string
+          opened_at: string
+          quantity: number
+          realized_pnl: number
+          ticker: string
+          updated_at: string
+        }
+        Insert: {
+          avg_entry_price: number
+          closed_at?: string | null
+          entry_order_id: string
+          opened_at: string
+          quantity: number
+          realized_pnl?: number
+          ticker: string
+          updated_at?: string
+        }
+        Update: {
+          avg_entry_price?: number
+          closed_at?: string | null
+          entry_order_id?: string
+          opened_at?: string
+          quantity?: number
+          realized_pnl?: number
+          ticker?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "positions_entry_order_id_fkey"
+            columns: ["entry_order_id"]
+            isOneToOne: true
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       signal_history: {
         Row: {
           data: Json
@@ -254,6 +411,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      apply_paper_order_state: {
+        Args: {
+          average_price: number
+          broker_id: string
+          broker_status: string
+          broker_timestamp: string
+          cumulative_quantity: number
+          local_order_id: string
+        }
+        Returns: undefined
+      }
       pending_signal_events: {
         Args: { batch_size?: number }
         Returns: {
