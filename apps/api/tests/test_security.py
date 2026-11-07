@@ -33,3 +33,12 @@ class SecurityTests(unittest.TestCase):
                 ).status_code,
                 200,
             )
+            db.supabase.table.return_value.select.return_value.limit.return_value.execute.side_effect = main.APIError(
+                {"code": "42501", "message": "sensitive provider detail", "details": None, "hint": None}
+            )
+            with self.assertLogs("src.main", level="WARNING") as logs:
+                result = client.get("/ready", headers={"x-horizon-token": "test-token"})
+            self.assertEqual(result.status_code, 503)
+            self.assertEqual(result.json(), {"detail": "Data service unavailable"})
+            self.assertIn("code=42501", logs.output[0])
+            self.assertNotIn("sensitive provider detail", " ".join(logs.output))

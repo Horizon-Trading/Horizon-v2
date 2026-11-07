@@ -7,6 +7,7 @@ from .db import supabase
 from postgrest.exceptions import APIError
 import httpx
 import logging
+import re
 
 from .routes.news import router as news_router
 from .routes.signals import router as signals_router
@@ -41,8 +42,13 @@ async def authenticate(request: Request, call_next):
 
 
 async def dependency_error(request: Request, exc: Exception):
+    # Log diagnostic codes only, never provider messages, URLs or credentials.
+    code = str(getattr(exc, "code", ""))
+    code = code if re.fullmatch(r"[A-Za-z0-9_]{1,32}", code) else "unknown"
+    response = getattr(exc, "response", None)
     logging.getLogger(__name__).warning(
-        "Dependency failure error=%s", type(exc).__name__
+        "Dependency failure error=%s code=%s http_status=%s",
+        type(exc).__name__, code, getattr(response, "status_code", "unknown"),
     )
     return JSONResponse(status_code=503, content={"detail": "Data service unavailable"})
 
