@@ -12,9 +12,9 @@ class Settings(BaseSettings):
     supabase_url: str
     supabase_secret_key: str
 
-    alpaca_news_url: str
-    alpaca_data_url: str
-    alpaca_paper_url: str
+    alpaca_news_url: str = "wss://stream.data.alpaca.markets/v1beta1/news"
+    alpaca_data_url: str = "https://data.alpaca.markets/v2"
+    alpaca_paper_url: str = "https://paper-api.alpaca.markets/v2"
     alpaca_api_key_id: str
     alpaca_api_secret_key: str
     quant_engine_path: str | None = None
