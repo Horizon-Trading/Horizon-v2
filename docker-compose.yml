@@ -29,7 +29,7 @@ services:
   workers:
     build:
       context: .
-      dockerfile: workers/Dockerfile
+      dockerfile: Dockerfile.worker
     env_file: .env
     environment:
       SUPABASE_URL: ${SUPABASE_DOCKER_URL:-http://host.docker.internal:54321}

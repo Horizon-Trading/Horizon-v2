@@ -19,8 +19,9 @@ Real Alpaca news authentication, stock snapshots, historical bars and paper
 account data have been verified with local Supabase and the dashboard.
 Paper execution is **disabled by default**. A real market-open entry/fill/exit
 lifecycle still awaits an open session and a genuinely qualifying fresh signal.
-Mocked broker tests are not evidence of real fills. Hosting and production
-Supabase selection are intentionally deferred.
+Mocked broker tests are not evidence of real fills. Vercel configuration is
+prepared for review; production deployment and Supabase selection remain
+outstanding. See [Vercel setup](docs/vercel.md).
 
 Validation on November 4–5, 2026:
 

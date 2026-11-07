@@ -1,6 +1,8 @@
 # Deployment runbook
 
-Hosting has not been selected or provisioned. The deployment unit is three
+Vercel is selected; remote deployment is not yet verified. See
+[Vercel setup](vercel.md) for services, bindings, daemon and domain configuration.
+The alternative Compose deployment unit is three
 Docker images in this monorepo: web, API and one long-running worker. The worker
 needs persistent execution, outbound WebSocket/HTTPS and its native binary;
 it is not a short-lived serverless job.

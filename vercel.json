@@ -1,0 +1,33 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "api": {
+      "root": "apps/api",
+      "framework": "fastapi",
+      "entrypoint": "src.main:app"
+    },
+    "web": {
+      "root": "apps/web",
+      "framework": "nextjs",
+      "buildCommand": "npm run build -- --webpack",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "api",
+          "format": "url",
+          "env": "HORIZON_API_URL"
+        }
+      ]
+    }
+  },
+  "daemons": {
+    "workers": {
+      "root": ".",
+      "entrypoint": "Dockerfile.worker",
+      "instances": { "iad1": 1 }
+    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": { "service": "web" } }
+  ]
+}
